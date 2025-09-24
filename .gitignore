@@ -1,0 +1,8 @@
+/__pycache__/
+__pycache__/
+*.py[cod]
+
+# Virtual envs and IDE folders (optional)
+env/
+venv/
+.vscode/

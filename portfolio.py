@@ -3,13 +3,8 @@ from __future__ import annotations
 from typing import Dict, List, Tuple
 
 from utils import Holding
+import yfinance as yf
 
-# Try to import yfinance; fall back to mock if unavailable
-try:
-    import yfinance as yf
-    YFINANCE_AVAILABLE = True
-except Exception:
-    YFINANCE_AVAILABLE = False
 
 
 def _mock_prices(symbols: List[str]) -> Dict[str, float]:
@@ -27,7 +22,7 @@ def _mock_prices(symbols: List[str]) -> Dict[str, float]:
 
 def fetch_prices(symbols: List[str], use_yfinance: bool = True) -> Dict[str, float]:
     prices = {}
-    if use_yfinance and YFINANCE_AVAILABLE:
+    if use_yfinance:
         try:
             tickers = yf.Tickers(" ".join(symbols))
             for sym in symbols:
@@ -44,6 +39,7 @@ def fetch_prices(symbols: List[str], use_yfinance: bool = True) -> Dict[str, flo
                 except Exception:
                     prices[sym] = 0.0
         except Exception:
+            # If the network or yfinance raises, fall back to mock prices
             prices = _mock_prices(symbols)
     else:
         prices = _mock_prices(symbols)

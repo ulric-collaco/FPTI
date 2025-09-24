@@ -1,4 +1,10 @@
-"""Core finance functions: cashflow, category breakdown, reporting, plotting."""
+"""Core finance functions: cashflow, category breakdown, reporting, plotting.
+
+This module will attempt to select an interactive matplotlib backend at import
+time so that calling code can display plots in GUI windows on platforms that
+support them. The code tries common interactive backends (TkAgg, Qt5Agg,
+Qt6Agg, WXAgg) and falls back to the default if none are available.
+"""
 from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
