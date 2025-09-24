@@ -1,0 +1,64 @@
+Date,Description,Amount,Category
+# Year-long sample transactions (monthly salary + variable expenses) to create richer charts
+2024-04-01,Salary,4800,Income
+2024-04-05,Groceries,-220,Food
+2024-04-10,Rent,-1400,Housing
+2024-04-15,Utilities,-180,Utilities
+2024-04-20,Freelance,400,Income
+2024-05-01,Salary,4900,Income
+2024-05-03,Groceries,-250,Food
+2024-05-10,Rent,-1400,Housing
+2024-05-18,Car Insurance,-120,Transport
+2024-05-22,Stocks Sell,300,Income
+2024-06-01,Salary,5000,Income
+2024-06-07,Groceries,-230,Food
+2024-06-12,Rent,-1450,Housing
+2024-06-20,Vacation,-900,Leisure
+2024-06-25,Freelance,600,Income
+2024-07-01,Salary,5000,Income
+2024-07-05,Groceries,-260,Food
+2024-07-10,Rent,-1450,Housing
+2024-07-14,Concert,-120,Entertainment
+2024-07-20,Dividends,80,Income
+2024-08-01,Salary,5100,Income
+2024-08-06,Groceries,-240,Food
+2024-08-12,Rent,-1500,Housing
+2024-08-19,Medical,-400,Health
+2024-08-22,Freelance,700,Income
+2024-09-01,Salary,5100,Income
+2024-09-04,Groceries,-270,Food
+2024-09-09,Rent,-1500,Housing
+2024-09-15,Car Repair,-450,Transport
+2024-09-20,Stocks Buy,-600,Investment
+2024-10-01,Salary,5200,Income
+2024-10-05,Groceries,-280,Food
+2024-10-11,Rent,-1500,Housing
+2024-10-23,Home Improvement,-800,Housing
+2024-10-28,Freelance,900,Income
+2024-11-01,Salary,5200,Income
+2024-11-07,Groceries,-300,Food
+2024-11-12,Rent,-1550,Housing
+2024-11-20,Gift,-150,Personal
+2024-11-25,Dividends,120,Income
+2024-12-01,Salary,5300,Income
+2024-12-06,Groceries,-350,Food
+2024-12-12,Rent,-1550,Housing
+2024-12-20,Holiday,-1200,Leisure
+2024-12-28,Freelance,1500,Income
+2025-01-01,Salary,5400,Income
+2025-01-07,Groceries,-320,Food
+2025-01-10,Rent,-1600,Housing
+2025-01-15,Utilities,-210,Utilities
+2025-01-20,Freelance,800,Income
+2025-01-22,Insurance,-220,Health
+2025-02-01,Salary,5400,Income
+2025-02-08,Groceries,-330,Food
+2025-02-14,Valentine Gift,-200,Personal
+2025-02-15,Car Repair,-500,Transport
+2025-02-20,Dividends,90,Income
+2025-03-01,Salary,5500,Income
+2025-03-05,Groceries,-340,Food
+2025-03-12,Concert,-190,Entertainment
+2025-03-15,Freelance,1200,Income
+2025-03-20,Internet,-80,Utilities
+2025-03-25,Stocks Sell,1000,Income

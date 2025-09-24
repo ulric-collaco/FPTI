@@ -1,0 +1,7 @@
+1500.50
+3200.00
+560.75
+-200.00  # overdraft example (will be parsed as negative)
+8500.00  # long-term savings account
+2400.00  # brokerage cash
+120.50
