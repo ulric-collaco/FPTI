@@ -1,79 +1,97 @@
 """Helpers: read transactions, balances, portfolio CSVs."""
-from __future__ import annotations
 import csv
-from dataclasses import dataclass
 from datetime import datetime
-from pathlib import Path
-from typing import List
 
 
-@dataclass
 class Transaction:
-    date: datetime
-    description: str
-    amount: float
-    category: str
+    def __init__(self, date, description, amount, category):
+        self.date = date
+        self.description = description
+        self.amount = amount
+        self.category = category
 
 
-@dataclass
 class Holding:
-    symbol: str
-    quantity: float
-    price: float = 0.0
+    def __init__(self, symbol, quantity, price=0.0):
+        self.symbol = symbol
+        self.quantity = quantity
+        self.price = price
 
 
-def read_transactions(path: Path) -> List[Transaction]:
-    txns: List[Transaction] = []
-    with path.open(newline="", encoding="utf-8") as f:
+def read_transactions(path):
+    txns = []
+    with open(path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for r in reader:
-            date_field = (r.get("Date") or "").strip()
+            date_field = r.get("Date")
+            if date_field is None:
+                date_field = ""
+            date_field = date_field.strip()
+            
             # skip comment rows or empty date cells
             if not date_field or date_field.startswith("#"):
                 continue
+            
             try:
                 date = datetime.fromisoformat(date_field)
-            except Exception:
+            except:
                 # skip rows with malformed dates
                 continue
-            desc = r.get("Description", "").strip()
+            
+            desc = r.get("Description")
+            if desc is None:
+                desc = ""
+            desc = desc.strip()
+            
             try:
                 amt = float(r.get("Amount", 0))
-            except ValueError:
+            except:
                 amt = 0.0
-            cat = r.get("Category", "Uncategorized").strip()
-            txns.append(Transaction(date=date, description=desc, amount=amt, category=cat))
+            
+            cat = r.get("Category")
+            if cat is None:
+                cat = "Uncategorized"
+            cat = cat.strip()
+            
+            new_transaction = Transaction(date, desc, amt, cat)
+            txns.append(new_transaction)
     return txns
 
 
-def read_balances(path: Path) -> List[float]:
+def read_balances(path):
     balances = []
-    with path.open(encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
                 continue
             try:
-                token = line.split()[0]
-                val = float(token)
+                words = line.split()
+                first_word = words[0]
+                val = float(first_word)
                 balances.append(val)
-            except Exception:
+            except:
                 continue
     return balances
 
 
-def read_portfolio(path: Path) -> List[Holding]:
-    holdings: List[Holding] = []
-    with path.open(newline="", encoding="utf-8") as f:
+def read_portfolio(path):
+    holdings = []
+    with open(path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for r in reader:
-            sym = r.get("Symbol") or r.get("symbol")
+            sym = r.get("Symbol")
+            if sym is None:
+                sym = r.get("symbol")
             if not sym:
                 continue
             sym = sym.strip()
+            
             try:
                 qty = float(r.get("Quantity", 0))
-            except Exception:
+            except:
                 qty = 0.0
-            holdings.append(Holding(symbol=sym, quantity=qty))
+            
+            new_holding = Holding(sym, qty)
+            holdings.append(new_holding)
     return holdings

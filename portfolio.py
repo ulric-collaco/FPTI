@@ -1,13 +1,10 @@
 """Portfolio functions: fetch prices (yfinance optional), value portfolio, print reports."""
-from __future__ import annotations
-from typing import Dict, List, Tuple
-
 from utils import Holding
 import yfinance as yf
 
 
 
-def _mock_prices(symbols: List[str]) -> Dict[str, float]:
+def _mock_prices(symbols):
     base = {
         "AAPL": 160.0,
         "TSLA": 220.0,
@@ -15,16 +12,21 @@ def _mock_prices(symbols: List[str]) -> Dict[str, float]:
         "ETH-USD": 3500.0,
     }
     prices = {}
-    for i, s in enumerate(symbols):
-        prices[s] = base.get(s, 20.0 + i * 5.0)
+    for i in range(len(symbols)):
+        s = symbols[i]
+        if s in base:
+            prices[s] = base[s]
+        else:
+            prices[s] = 20.0 + i * 5.0
     return prices
 
 
-def fetch_prices(symbols: List[str], use_yfinance: bool = True) -> Dict[str, float]:
+def fetch_prices(symbols, use_yfinance=True):
     prices = {}
     if use_yfinance:
         try:
-            tickers = yf.Tickers(" ".join(symbols))
+            symbol_string = " ".join(symbols)
+            tickers = yf.Tickers(symbol_string)
             for sym in symbols:
                 try:
                     tk = tickers.tickers.get(sym)
@@ -33,12 +35,16 @@ def fetch_prices(symbols: List[str], use_yfinance: bool = True) -> Dict[str, flo
                         continue
                     info = tk.history(period="1d")
                     if not info.empty:
-                        prices[sym] = float(info["Close"].iloc[-1])
+                        last_close = info["Close"].iloc[-1]
+                        prices[sym] = float(last_close)
                     else:
-                        prices[sym] = float(tk.info.get("regularMarketPrice", 0.0) or 0.0)
-                except Exception:
+                        market_price = tk.info.get("regularMarketPrice", 0.0)
+                        if market_price is None:
+                            market_price = 0.0
+                        prices[sym] = float(market_price)
+                except:
                     prices[sym] = 0.0
-        except Exception:
+        except:
             # If the network or yfinance raises, fall back to mock prices
             prices = _mock_prices(symbols)
     else:
@@ -46,34 +52,52 @@ def fetch_prices(symbols: List[str], use_yfinance: bool = True) -> Dict[str, flo
     return prices
 
 
-def value_portfolio(holdings: List[Holding], use_yfinance: bool = True) -> Tuple[List[Holding], float]:
-    syms = [h.symbol for h in holdings]
-    prices = fetch_prices(syms, use_yfinance=use_yfinance)
+def value_portfolio(holdings, use_yfinance=True):
+    syms = []
+    for h in holdings:
+        syms.append(h.symbol)
+    prices = fetch_prices(syms, use_yfinance)
     total = 0.0
     for h in holdings:
-        p = prices.get(h.symbol, 0.0)
+        if h.symbol in prices:
+            p = prices[h.symbol]
+        else:
+            p = 0.0
         h.price = p
-        total += p * h.quantity
+        total = total + (p * h.quantity)
     return holdings, total
 
 
-def compute_net_worth(balances: List[float], portfolio_value: float) -> float:
-    return sum(balances) + portfolio_value
+def compute_net_worth(balances, portfolio_value):
+    total_balances = 0.0
+    for balance in balances:
+        total_balances = total_balances + balance
+    return total_balances + portfolio_value
 
 
-def print_portfolio(holdings: List[Holding], total_value: float):
+def print_portfolio(holdings, total_value):
     print("\nPortfolio Details")
     print("Symbol\tQuantity\tPrice\tValue")
     print("-------------------------------------------")
     for h in holdings:
-        print(f"{h.symbol}\t{h.quantity:.4f}\t{h.price:,.2f}\t{h.price * h.quantity:,.2f}")
-    print(f"Total portfolio value: {total_value:,.2f}")
+        value = h.price * h.quantity
+        print(h.symbol + "\t" + str(round(h.quantity, 4)) + "\t" + str(round(h.price, 2)) + "\t" + str(round(value, 2)))
+    print("Total portfolio value: " + str(round(total_value, 2)))
 
 
-def print_net_worth(balances: List[float], portfolio_value: float):
+def print_net_worth(balances, portfolio_value):
     print("\nNet Worth")
-    for i, b in enumerate(balances, start=1):
-        print(f"Balance {i}: {b:,.2f}")
-    print(f"Total cash/balances: {sum(balances):,.2f}")
-    print(f"Portfolio value: {portfolio_value:,.2f}")
-    print(f"TOTAL net worth: {compute_net_worth(balances, portfolio_value):,.2f}")
+    for i in range(len(balances)):
+        b = balances[i]
+        balance_number = i + 1
+        print("Balance " + str(balance_number) + ": " + str(round(b, 2)))
+    
+    total_balances = 0.0
+    for balance in balances:
+        total_balances = total_balances + balance
+    
+    print("Total cash/balances: " + str(round(total_balances, 2)))
+    print("Portfolio value: " + str(round(portfolio_value, 2)))
+    
+    net_worth = compute_net_worth(balances, portfolio_value)
+    print("TOTAL net worth: " + str(round(net_worth, 2)))
