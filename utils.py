@@ -1,4 +1,3 @@
-"""Helpers: read transactions, balances, portfolio CSVs."""
 import csv
 from datetime import datetime
 
@@ -28,14 +27,12 @@ def read_transactions(path):
                 date_field = ""
             date_field = date_field.strip()
             
-            # skip comment rows or empty date cells
             if not date_field or date_field.startswith("#"):
                 continue
             
             try:
                 date = datetime.fromisoformat(date_field)
             except:
-                # skip rows with malformed dates
                 continue
             
             desc = r.get("Description")

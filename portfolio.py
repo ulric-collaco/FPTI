@@ -1,4 +1,3 @@
-"""Portfolio functions: fetch prices (yfinance optional), value portfolio, print reports."""
 from utils import Holding
 import yfinance as yf
 
@@ -45,7 +44,6 @@ def fetch_prices(symbols, use_yfinance=True):
                 except:
                     prices[sym] = 0.0
         except:
-            # If the network or yfinance raises, fall back to mock prices
             prices = _mock_prices(symbols)
     else:
         prices = _mock_prices(symbols)
